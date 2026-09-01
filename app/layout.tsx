@@ -3,6 +3,7 @@ import { Head } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
 import type { ReactNode } from "react";
 import "nextra-theme-docs/style.css";
+import "./globals.css";
 
 export const metadata = {
   // Now that a real domain exists, this fixes relative OG/canonical URL
@@ -40,7 +41,7 @@ const logo = (
       <rect fill="#fafafa" height="9" rx="3" width="13" x="9" y="8" />
       <rect fill="#18181b" height="4" rx="1.5" width="5" x="14" y="12" />
     </svg>
-    <b style={{ fontSize: "1.125rem" }}>POF</b>
+    <b style={{ fontSize: "1.125rem" }}>Portable Organization Format</b>
   </span>
 );
 

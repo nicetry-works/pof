@@ -1,0 +1,16 @@
+/* Small overrides on top of nextra-theme-docs' own stylesheet — this
+   project has no Tailwind pipeline of its own, so these are plain CSS
+   rules targeting the stable, unprefixed classnames Nextra ships
+   alongside its compiled utility classes (`.nextra-card`, not the `x:`-
+   prefixed ones), not a parallel utility system. */
+
+/* Cards.Card's description <p> ships with zero padding while its title
+   label has a full 1rem — the description sits flush against the card's
+   top/left border while the label floats with visible breathing room,
+   reading as inconsistent/unpadded. Match the two. */
+.nextra-card > p {
+  padding: 1rem 1rem 0;
+}
+.nextra-card > span {
+  padding-top: 0.5rem;
+}

@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **Portable Organization Format** — a content format for the knowledge and
-execution layer of any organization: plain Markdown files with a YAML
+execution layers of any organization: plain Markdown files with a YAML
 frontmatter block, conformant to [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
 (Open Knowledge Format) v0.2, meant to be read equally well by a person, a
 script, or an agent.
