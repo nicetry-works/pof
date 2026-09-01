@@ -1,0 +1,65 @@
+import { Callout } from "nextra/components";
+
+# WebMCP, in-page
+
+An agent sharing your browser tab registers tools directly against the
+page, via `document.modelContext` (the current spec name; some
+implementations still expose the earlier `navigator.modelContext` — check
+both). It inherits your session as-is — no separate credential, no OAuth
+handshake — and it only exists for as long as the tab does. Close the tab,
+and its tools go with it; nothing lingers server-side waiting for a
+connection that isn't coming back.
+
+## Trying it without a real agent
+
+The browser exposes a testing surface for exactly this:
+
+```js
+// List every tool currently registered on the page
+await navigator.modelContextTesting.getTools()
+
+// Call one directly
+await navigator.modelContextTesting.executeTool("list_roles", {})
+```
+
+This works behind `chrome://flags/#enable-webmcp-testing` — see
+[Quickstart](/quickstart) for a full walkthrough starting from a blank
+tab.
+
+## The full tool list
+
+A reference implementation registers tools per section, read vs. write
+kept explicit:
+
+| Section | Read-only | Read/write |
+|---|---|---|
+| Roles | `list_roles`, `get_role` | `create_role`, `update_role`, `delete_role` |
+| Skills | `list_skills`, `get_skill` | `create_skill`, `update_skill`, `delete_skill` |
+| Notebooks | `list_notebooks`, `get_notebook`, `list_notebook_sources` | `create_notebook`, `update_notebook`, `add_notebook_note`, `delete_notebook`, `add_notebook_source`, `delete_notebook_source` |
+| Wiki | `list_wiki_objects`, `get_wiki_object` | *(none on this surface — see [Wiki objects](/format/wiki#read-only-on-every-agent-surface))* |
+
+<Callout type="info">
+  Every tool carries its own read-only hint (`readOnlyHint`), so an agent
+  — or whatever's driving it — knows in advance which calls need a
+  human's confirmation before running and which don't. It's metadata on
+  the tool registration itself, not something an agent has to infer from
+  the tool's name or description.
+</Callout>
+
+## Why tools are registered per section, not all at once
+
+Tools are only registered for whichever section of the workspace is
+actually open right now — the Roles page registers the five Role tools,
+the Notebooks page registers the Notebook tools, and so on. An agent
+sharing your tab sees tools for exactly what you're looking at, not a
+fixed menu of everything the app can ever do. Navigate to a different
+section, and the tool set changes to match — consistent with the idea
+that this surface is about acting on what's in front of you right now,
+not a general-purpose remote control.
+
+## Wiki is deliberately read-only here
+
+Writing a new Wiki object goes through the workspace's own inbox flow
+instead of a tool call — see
+[Wiki objects](/format/wiki#read-only-on-every-agent-surface) for why
+that's true on all three surfaces, not just this one.

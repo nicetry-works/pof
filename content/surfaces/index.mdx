@@ -1,0 +1,24 @@
+# Access surfaces
+
+The same POF documents are reachable three different ways. Which one an
+agent uses depends on what kind of agent it is — one sharing your browser
+tab right now, one you've approved once and trust to come back, or one
+that would rather speak a standard protocol and never open the site at
+all. All three call the exact same underlying functions to read or write
+a document — see [Why POF](/concepts/why-pof#one-source-of-truth-per-action)
+for why that constraint is the actual point.
+
+## At a glance
+
+| | [WebMCP](/surfaces/webmcp) | [Delegated access](/surfaces/delegated-access) | [Remote MCP](/surfaces/remote-mcp) |
+|---|---|---|---|
+| Needs a credential? | No — inherits your session | Yes — approved once, scoped | Yes — OAuth 2.1 |
+| Wiki writes? | No | No | No |
+| Delete operations? | Yes | Yes | No |
+| Scoped to one Role? | No | No | Yes, per connection |
+| Reads arrive as | Tool calls | Tool calls | Resources |
+| Who's it for | An agent sharing your browser tab, right now | An agent you trust to come back later, without a shared browser | An agent that would rather speak a standard protocol than open the site |
+
+Read each surface's own page for the full tool/capability list and the
+reasoning behind where it's more — or less — permissive than the other
+two.

@@ -1,0 +1,78 @@
+import { Callout, Steps } from "nextra/components";
+
+# Quickstart
+
+This walks through POF hands-on, against the reference implementation
+built for the OpenAI WebMCP Challenge. Nothing here needs an account,
+an API key, or any setup beyond a Chromium-based browser.
+
+## Prerequisites
+
+- A Chromium-based browser (Chrome, Edge) with the WebMCP testing surface
+  enabled: visit `chrome://flags/#enable-webmcp-testing` and turn it on.
+  This exposes `navigator.modelContextTesting`, which lets you call an
+  in-page agent tool directly from DevTools — no real agent required to
+  try this.
+- The reference app running (locally, or wherever it's deployed) — it
+  needs nothing from you to start using it.
+
+<Steps>
+
+### Land on the app
+
+Open the app's `/roles` page. There's no sign-up wall: a real,
+credential-less session is created for you the instant you arrive. Roles,
+Skills, Notebooks, and Wiki are all already usable.
+
+### Create a Role
+
+Use the "New role" action in the UI — give it a team and a position (for
+example, team `commercial`, position `revops-pipeline-and-forecasting`).
+This writes a real [`ROLE.md`](/format/roles) behind the scenes, exactly
+the shape described in [The format](/format).
+
+### Call the WebMCP tool yourself
+
+Open DevTools on that same tab and run:
+
+```js
+await navigator.modelContextTesting.getTools()
+```
+
+You should see `list_roles`, `get_role`, `create_role`, `update_role`, and
+`delete_role` in the list — the same tools described in
+[WebMCP, in-page](/surfaces/webmcp). Now call one:
+
+```js
+await navigator.modelContextTesting.executeTool("list_roles", {})
+```
+
+That's the entire integration surface for an in-page agent: no API key,
+no separate auth step — it's reading through the same session your
+browser tab already has open.
+
+### Export it as plain files
+
+Back in the UI, use the workspace-wide **Export** action in the header.
+You'll get a `.zip` — open it, and you'll find your new Role at
+`roles/commercial/revops-pipeline-and-forecasting/ROLE.md`, readable in
+any text editor, with nothing app-specific about it. See
+[The export bundle](/format/export) for the full layout.
+
+</Steps>
+
+<Callout type="info">
+  Everything above works identically for Skills, Notebooks, and Wiki — a
+  Role was just the shortest path to something visible. The tool names
+  differ (`create_skill`, `add_notebook_note`, `get_wiki_object`, ...) but
+  the shape doesn't.
+</Callout>
+
+## Next steps
+
+- Read [Why POF](/concepts/why-pof) for the thinking behind the zero-friction,
+  one-source-of-truth design.
+- Read [Access surfaces](/surfaces) for the other two ways an agent can
+  reach the same data without sharing your browser tab.
+- Read [The format](/format) for the full frontmatter spec of all four
+  document types.

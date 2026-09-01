@@ -1,0 +1,71 @@
+import { Callout } from "nextra/components";
+
+# Remote MCP server
+
+For an agent that would rather speak a standard protocol and connect
+without ever opening the site, the same data is also served by an
+ordinary MCP server — OAuth 2.1 for the handshake, and a connection
+scoped to one specific Role, chosen once during consent.
+
+## Reads are resources, writes are tools
+
+The one deliberate asymmetry worth calling out: **reads are resources,
+writes are tools.** Each Role, Skill, Notebook, and Wiki object is
+addressable as a resource URI —
+
+```
+ops://roles/<team>/<position>
+ops://skills/<domain>/<name>
+ops://notebooks/<project>/<name>
+ops://wikis/<wiki>/<entity>/<identifier>
+```
+
+— an agent reads it the way it would read any other MCP resource, no
+tool call needed. This is different from [WebMCP](/surfaces/webmcp) and
+[delegated access](/surfaces/delegated-access), where reads are also tool
+calls (`list_roles`, `get_role`, ...). A remote MCP client that already
+knows how to browse resources gets the whole read surface for free.
+
+## A smaller write surface, on purpose
+
+Writes are a deliberately smaller set of tools than the other two
+surfaces offer:
+
+- `create_role`, `update_role`
+- `create_skill`, `update_skill`
+- `create_notebook`, `add_notebook_note`, `add_notebook_source`,
+  `delete_notebook_source`
+
+No delete tools for Roles, Skills, or Notebooks, and no Wiki writes at
+all on this surface — see [Tool reference](/reference/tool-reference) for
+the full side-by-side against the other two surfaces.
+
+<Callout type="warning">
+  A remote, protocol-level connection is held to a more conservative bar
+  than an agent already sitting inside your own browser tab. Deleting
+  something is available on WebMCP and delegated access, where a human
+  is either watching the same tab or approved that specific capability
+  by name — not on a connection that authenticated once and could be
+  calling from anywhere since.
+</Callout>
+
+## Scoped to one Role
+
+The human picks a Role during OAuth consent, and that choice sticks to
+the connection: Skills and Notebooks resources returned to this
+connection are filtered down to whatever that Role is linked to via its
+`roles` field (see [Roles](/format/roles#how-other-document-types-reference-a-role)).
+Role and Wiki resources are *not* filtered this way — every Role stays
+visible to every connection, on the reasoning that "who exists and what
+they're responsible for" is organizational context worth any connected
+agent having, even one scoped to a narrower slice of the actual work.
+
+## Why OAuth here and nowhere else
+
+WebMCP inherits a browser session that already exists; delegated access
+uses its own device-authorization flow built for agents with no browser
+at all. A remote MCP connection is the one surface meant to be added once
+to a long-lived client configuration (Claude Desktop, Cursor, or anything
+else that speaks MCP) and then simply work from then on — OAuth 2.1 is
+the mechanism that lets a client discover, request, and periodically
+refresh that access without a human re-approving it every session.

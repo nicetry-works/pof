@@ -1,0 +1,69 @@
+import { Callout, Steps } from "nextra/components";
+
+# Delegated access
+
+For an agent that isn't sharing your browser — running elsewhere
+entirely, with no cookie to inherit — a device-authorization flow gets it
+its own scoped credential, approved by you once.
+
+<Steps>
+
+### The agent discovers what's possible
+
+It fetches `/.well-known/agent-configuration`, the same way a client
+discovers an OpenID provider's configuration. This is where it learns
+what capabilities exist to ask for — the full list is on
+[Tool reference](/reference/tool-reference).
+
+### It starts a device-authorization request
+
+The response gives it an `agent_id` and a short `code`, plus a link to
+send you — the same shape as any OAuth device-authorization flow (think
+"go to this URL and enter this code").
+
+### You approve it, once
+
+You open that link, see the agent's name and the specific capabilities it
+wants — not a blanket "allow everything" — and approve or deny each one
+individually.
+
+### The agent gets a scoped credential
+
+It walks away with a credential that can only do what you approved — for
+that Role's, Skill's, or Notebook's data specifically, nothing broader.
+
+</Steps>
+
+## What it can do
+
+The capability set mirrors [WebMCP](/surfaces/webmcp)'s almost exactly —
+the same roughly 20 actions across Roles, Skills, and Notebooks, Wiki
+still read-only, minus a couple of the narrower helper actions WebMCP
+exposes directly on the page (`list_notebook_sources` has no delegated
+equivalent, though `add_notebook_source`/`delete_notebook_source` do).
+See [Tool reference](/reference/tool-reference) for the exact, side-by-side
+list.
+
+## No autonomous mode
+
+<Callout type="warning">
+  There's no "autonomous"/service-account mode: every delegated credential
+  maps back to one human's account. An agent acting this way is always
+  acting *for* someone, never as an anonymous actor of its own.
+</Callout>
+
+This is a deliberate scope decision, not a missing feature: the reference
+implementation has no organization or tenant concept above a single
+account, so there's no meaningful "acting on behalf of the org, not any
+particular person" to model in the first place. A delegated credential's
+authority is exactly as broad as the human who approved it, and no
+broader.
+
+## Revoking access
+
+The underlying plugin (`@better-auth/agent-auth`) supports revocation at
+either granularity — an entire agent, or one specific capability grant.
+The reference implementation doesn't yet surface a dedicated "revoke"
+button in its own UI, but the mechanism it would call already exists
+underneath: nothing here is a one-way door by design, even where the
+current interface hasn't caught up to exposing it yet.

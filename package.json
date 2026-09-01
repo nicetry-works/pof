@@ -1,0 +1,40 @@
+{
+  "name": "pof-docs",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "homepage": "https://pof.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicetry-works/pof.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nicetry-works/pof/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "next dev -p 3003",
+    "build": "next build",
+    "start": "next start -p 3003",
+    "lint": "eslint",
+    "postinstall": "patch-package"
+  },
+  "dependencies": {
+    "next": "^15.5.25",
+    "nextra": "^4.6.1",
+    "nextra-theme-docs": "^4.6.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^15.5.25",
+    "patch-package": "^8.0.1",
+    "typescript": "^5"
+  }
+}

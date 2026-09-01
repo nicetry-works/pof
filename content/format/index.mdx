@@ -1,0 +1,28 @@
+# The format
+
+Every POF document is a Markdown file with a YAML frontmatter block, built
+to [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
+(Open Knowledge Format) v0.2. OKF §10 requires only that `type` be present
+and non-empty; `title`, `description`, and `tags` are OKF's recommended
+family per §4. Everything past that is POF-specific — one shape per
+document type, described in full on its own page.
+
+Two small conventions apply everywhere, not just to one type: a field
+that has no value is simply **absent** from the frontmatter — never
+written out empty — and a list item can be either a plain scalar
+(`- item`) or a `key: value` pair (`- key: value`), depending on what
+that field needs to carry. See [Documents and slugs](/concepts/documents-and-slugs)
+for how titles turn into the `name` field you'll see in every example.
+
+## The four document types, at a glance
+
+| Type | Required | Optional | Body |
+|---|---|---|---|
+| [**Role**](/format/roles) (`type: Role`) | `title`, `name` | `team`, `person` | Fixed headings — `# Identity`, `# Operating frame`, `# Purpose`, `# Rules` — then any number of free custom headings. |
+| [**Skill**](/format/skills) (`type: Skill`) | `title`, `description`, `name`, `category` | `domain`, `endorse`, `roles` | Fully free-form headings — no fixed shape at all. |
+| [**Notebook**](/format/notebooks) (`type: Notebook`) | `title`, `name` | `description`, `project`, `domains`, `roles`, `sources` | Just a heading and an optional summary. Notes are separate, untitled files under `notes/`, one per timestamp. |
+| [**Wiki object**](/format/wiki) (`type` = the entity's own name, e.g. `Vendor`) | `title`, `name` | `resource`, `tags`, `metadata` | Free-form. |
+
+Each type's own page covers its fields in full, a worked example, and the
+edge cases worth knowing. [The export bundle](/format/export) shows how
+all four look laid out together, on disk, in one workspace.

@@ -1,0 +1,80 @@
+import { Callout, FileTree } from "nextra/components";
+
+# Notebooks
+
+A Notebook is an ongoing thread — research in progress, a running log, a
+collection of sources — rather than a finished reference. Where a
+[Skill](/format/skills) documents something settled, a Notebook is
+explicitly allowed to be half-finished.
+
+## Fields
+
+| Field | Required | Notes |
+|---|---|---|
+| `type` | Yes | Always `Notebook`. |
+| `title` | Yes | The human-readable name. |
+| `name` | Yes | Derived from `title`; the slug that names this Notebook's export folder. |
+| `description` | No | A short summary of what this Notebook is tracking. |
+| `project` | No | Which project this belongs to, slugified. |
+| `domains` | No | Array of broader areas this Notebook touches, each slugified. |
+| `roles` | No | Array of `<team-slug>/<position-slug>` strings, same shape as a [Skill](/format/skills)'s. |
+| `sources` | No | Array of reference labels — plain strings or `{key, value}` pairs (a label and a URL). **Not slugified** — see [Documents and slugs](/concepts/documents-and-slugs#not-everything-gets-slugified). |
+
+## Body: mostly not in `NOTEBOOK.md` itself
+
+The `NOTEBOOK.md` file's body is deliberately thin — just a `# <name>`
+heading and an optional one-paragraph summary. The actual content of a
+Notebook lives as separate note files:
+
+<FileTree>
+  <FileTree.Folder name="notebooks" defaultOpen>
+    <FileTree.Folder name="q3-pricing-research" defaultOpen>
+      <FileTree.File name="NOTEBOOK.md" />
+      <FileTree.Folder name="notes" defaultOpen>
+        <FileTree.File name="2026-08-30T14-22-01.md" />
+        <FileTree.File name="2026-08-30T15-01-00.md" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+```yaml filename="NOTEBOOK.md"
+---
+type: Notebook
+title: Q3 pricing research
+description: Notes for the Q3 pricing model revamp
+name: q3-pricing-research
+project: pricing-revamp
+sources:
+  - Internal pricing doc: https://...
+---
+
+# Q3 pricing research
+
+Current state: gathering competitor data.
+```
+
+```md filename="notes/2026-08-30T14-22-01.md"
+Talked to sales — three deals stalled on the current tier boundaries.
+```
+
+Each note is its own plain file, named by the exact moment it was written
+(an ISO-8601 UTC timestamp, `:` replaced with `-` for filesystem safety),
+with no frontmatter of its own — a note isn't a bundle, just one dated
+entry in an ongoing thread. Two notes written in the same second get a
+`-2`/`-3` suffix, the same collision rule that applies to slugs elsewhere
+in POF.
+
+<Callout type="info">
+  `add_notebook_note` — available on all three [access surfaces](/surfaces)
+  — is the most natural way for an agent to log something in progress: it
+  appends one new note file, it never edits `NOTEBOOK.md` itself.
+</Callout>
+
+## Sources vs. notes
+
+A source is a *reference* — something the Notebook draws on (a doc, a
+person, a link). A note is an *entry* — something written into the
+Notebook as work happens. Both accumulate over the Notebook's life, but
+they answer different questions: sources answer "where did this
+knowledge come from," notes answer "what have we learned so far."

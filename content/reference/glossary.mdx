@@ -1,0 +1,47 @@
+# Glossary
+
+**Bundle**
+A folder of one or more OKF-conformant Markdown files representing a
+document and anything attached to it. In POF, a Skill's folder (with its
+`SKILL.md` and any attached files) is a bundle; so is the whole workspace
+[export](/format/export) taken as one unit.
+
+**Capability**
+The unit of permission in [delegated access](/surfaces/delegated-access) —
+one named action (`create_role`, `add_notebook_note`, ...) a human
+approves for one agent to perform, on their behalf, going forward.
+
+**Delegated access**
+The access surface for an agent without a shared browser tab: a
+device-authorization flow that ends in the agent holding its own scoped
+credential. See [Delegated access](/surfaces/delegated-access).
+
+**Frontmatter**
+The YAML block at the top of every POF document, delimited by `---`
+lines, carrying its structured fields (`type`, `title`, `name`, ...)
+separately from its free-form Markdown body.
+
+**MCP (Model Context Protocol)**
+An open protocol for how an agent connects to tools and resources,
+independent of what those tools or resources hold. See
+[POF vs. MCP vs. Agent Skills](/concepts/pof-vs-mcp-vs-skills).
+
+**OKF (Open Knowledge Format)**
+The underlying frontmatter convention POF's documents conform to: `type`
+required, `title`/`description`/`tags` as the recommended field family.
+See [The format](/format).
+
+**Resource**
+In MCP terms, a piece of content an agent reads by URI rather than by
+calling a tool. The [remote MCP server](/surfaces/remote-mcp) exposes
+every POF document this way.
+
+**Slug**
+The lowercase, hyphenated, accent-stripped form of a title, used
+anywhere a document needs a stable, addressable name — a folder name, a
+URI segment. See [Documents and slugs](/concepts/documents-and-slugs).
+
+**WebMCP**
+The browser API (`document.modelContext`) that lets a web page register
+tools an in-page agent can call directly, inheriting whatever session
+that page already has. See [WebMCP, in-page](/surfaces/webmcp).

@@ -1,0 +1,64 @@
+import { Callout } from "nextra/components";
+
+# Tool reference
+
+Every named action across all three [access surfaces](/surfaces), in one
+table. "Tool" means a callable action (a WebMCP tool, a delegated-access
+capability, or an MCP tool). "Resource" means the remote MCP server
+serves that read as an addressable URI instead of a callable action — see
+[Remote MCP server](/surfaces/remote-mcp#reads-are-resources-writes-are-tools).
+A `—` means that surface doesn't expose that action at all.
+
+## Roles
+
+| Action | WebMCP | Delegated access | Remote MCP |
+|---|---|---|---|
+| `list_roles` | Tool | Capability | Resource |
+| `get_role` | Tool | Capability | Resource |
+| `create_role` | Tool | Capability | Tool |
+| `update_role` | Tool | Capability | Tool |
+| `delete_role` | Tool | Capability | — |
+
+## Skills
+
+| Action | WebMCP | Delegated access | Remote MCP |
+|---|---|---|---|
+| `list_skills` | Tool | Capability | Resource |
+| `get_skill` | Tool | Capability | Resource |
+| `create_skill` | Tool | Capability | Tool |
+| `update_skill` | Tool | Capability | Tool |
+| `delete_skill` | Tool | Capability | — |
+
+## Notebooks
+
+| Action | WebMCP | Delegated access | Remote MCP |
+|---|---|---|---|
+| `list_notebooks` | Tool | Capability | Resource |
+| `get_notebook` | Tool | Capability | Resource |
+| `create_notebook` | Tool | Capability | Tool |
+| `update_notebook` | Tool | Capability | — |
+| `add_notebook_note` | Tool | Capability | Tool |
+| `delete_notebook` | Tool | Capability | — |
+| `list_notebook_sources` | Tool | — | — |
+| `add_notebook_source` | Tool | Capability | Tool |
+| `delete_notebook_source` | Tool | Capability | Tool |
+
+## Wiki
+
+| Action | WebMCP | Delegated access | Remote MCP |
+|---|---|---|---|
+| `list_wiki_objects` | Tool (read-only) | Capability (read-only) | Resource |
+| `get_wiki_object` | Tool (read-only) | Capability (read-only) | Resource |
+
+No surface ever writes a Wiki object — see
+[Wiki objects](/format/wiki#read-only-on-every-agent-surface) for why.
+
+<Callout type="info">
+  Reading this table by column tells a story on its own: WebMCP is the
+  most complete surface (it's the one running inside a tab a human is
+  already watching), delegated access mirrors it almost exactly, and
+  remote MCP is deliberately the narrowest of the three — no deletes
+  anywhere, and only four Notebook write tools instead of six. See
+  [Remote MCP server](/surfaces/remote-mcp#a-smaller-write-surface-on-purpose)
+  for the reasoning.
+</Callout>

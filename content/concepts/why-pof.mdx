@@ -1,0 +1,77 @@
+import { Callout } from "nextra/components";
+
+# Why POF
+
+This project treats organizational knowledge as **portable data first,
+product second.** Everything below follows from that one sentence.
+
+## Zero-friction by default
+
+Most tools that want to hold your organization's knowledge start by
+asking for an account. The reference implementation starts by giving you
+one anyway: the instant anyone lands — a person or an agent — a real,
+credential-less user is created for them, and the four sections
+([Roles](/format/roles), [Skills](/format/skills),
+[Notebooks](/format/notebooks), [Wiki](/format/wiki)) are already there
+to use.
+
+"Claiming" that account later — signing up while you already have that
+session — doesn't start you over. It migrates ownership of everything
+you've already created, and every access grant an agent already holds,
+onto the new account, before the anonymous one is discarded. Trying the
+thing before deciding to keep it costs nothing, and nothing you build
+while trying it is at risk of being thrown away.
+
+This matters more for an agent than it does for a person. A person can
+tolerate a sign-up form once. An agent evaluating "should I bother
+integrating with this," in the middle of doing something else entirely,
+usually won't — friction at the front door is a real, measurable tax on
+whether an agent-facing surface gets used at all.
+
+## One source of truth per action
+
+Three different [access surfaces](/surfaces) exist so that three
+different kinds of agents can reach the same workspace on their own
+terms — one sharing your browser tab, one you've approved once, one
+speaking a standard remote protocol. All three call the exact same
+underlying functions to read or write a document.
+
+<Callout type="info">
+  There is exactly one implementation of `create_role` — not three
+  slightly different ones that happen to agree most of the time.
+</Callout>
+
+That single-implementation constraint isn't an implementation detail
+worth skipping over. It's the actual guarantee being made: whichever door
+an agent uses, it sees and changes the same thing you see, under the same
+rules, at the same time. It also means a new rule (a validation, a quota,
+a new required field) is written once and is immediately true everywhere
+— there's no surface that's quietly a version behind.
+
+## Portable, not platform-locked
+
+The whole point of the name is in the second word as much as the first.
+A workspace built on POF exports as an ordinary folder of Markdown
+files — no proprietary export format, no lock-in step, nothing left
+behind that only this particular app can read. See
+[The export bundle](/format/export) for exactly what that folder looks
+like. The app is an editor over that data. It is not the data's owner.
+
+If this project disappeared tomorrow, what you built with it wouldn't.
+That's not a hedge against the project failing — it's a design
+consequence of the format being the actual product, and the app being one
+convenient way to work with it.
+
+## What this actually is
+
+This documentation describes a format and an architecture, illustrated
+against one real, working reference implementation: a small ops
+workspace covering Roles, Skills, Notebooks, and a Wiki, built for the
+OpenAI WebMCP Challenge. The format doesn't depend on that implementation
+existing — but seeing it against something real, rather than only in the
+abstract, is the point of this documentation. Every field name, tool
+name, and example in these pages is checked against that implementation's
+actual source, not invented for illustration.
+
+Continue with [POF vs. MCP vs. Agent Skills](/concepts/pof-vs-mcp-vs-skills)
+for how this fits next to the two things it gets compared to most often.

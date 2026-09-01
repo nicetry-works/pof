@@ -1,0 +1,61 @@
+import { Callout } from "nextra/components";
+
+# Documents and slugs
+
+Every POF document type — [Role](/format/roles), [Skill](/format/skills),
+[Notebook](/format/notebooks), [Wiki object](/format/wiki) — shares two
+small conventions worth understanding once, rather than re-explaining on
+every page.
+
+## `type` names the shape, not the identity
+
+OKF §10 requires a `type` field on every document. For Roles, Skills, and
+Notebooks, `type` is always the fixed shape name (`Role`, `Skill`,
+`Notebook`). Wiki objects are the one exception: `type` is the *entity's
+own type name* — `Vendor`, `Customer`, whatever the Wiki was set up to
+track — because a Wiki is the one document type where the shape itself is
+user-defined, not fixed by POF. Either way, `type` answers "what kind of
+document is this," never "which specific one."
+
+## Titles become slugs
+
+You write a human title (`RevOps (pipeline and forecasting)`, `Acme
+Corp`). The reference implementation derives a filesystem- and
+URL-safe `name` from it automatically — you never type a slug by hand:
+
+1. Normalize and strip accents (`á` → `a`, `ñ` → `n`).
+2. Lowercase everything.
+3. Replace every run of non-alphanumeric characters with a single `-`.
+4. Trim leading/trailing `-`.
+
+`RevOps (pipeline and forecasting)` becomes
+`revops-pipeline-and-forecasting`. This is exactly the algorithm real
+filesystems and URLs already expect, applied consistently everywhere a
+document needs a stable, addressable name — a Role's folder name, a
+Skill's export path, the identifier segment of a Wiki object's resource
+URI (`ops://wikis/<wiki>/<entity>/<identifier>`).
+
+If two documents you own would slugify to the same name, the second one
+gets a numeric suffix (`-2`, `-3`, ...) — the same rule any real
+filesystem applies to a duplicate filename. Notebook notes follow the
+same pattern for a different reason: two notes written in the same
+second get `-2` appended to their timestamp-based filename instead of
+overwriting each other.
+
+## Not everything gets slugified
+
+Some fields are deliberately left as free text, because slugifying them
+would destroy the thing they're for:
+
+<Callout type="info">
+  A Notebook's `sources` and a Wiki object's `metadata` hold values like
+  phone numbers, email addresses, and URLs — data meant to be read back
+  exactly as entered, not turned into an identifier. Only the fields that
+  actually name or address a document get slugified.
+</Callout>
+
+This is a small distinction, but it's the reason `metadata` on a Wiki
+object can hold `contact-email: billing@acme.com` intact instead of
+mangling it into something unreadable — see [Wiki objects](/format/wiki)
+for the full picture of what's structured versus what's genuinely free
+text.

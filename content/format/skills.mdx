@@ -1,0 +1,94 @@
+import { Callout, FileTree, Tabs } from "nextra/components";
+
+# Skills
+
+A Skill documents one repeatable thing — a technical reference, a
+business concept, or a process — in enough detail that whoever (or
+whatever) reads it can act on it without asking someone first.
+
+## Fields
+
+| Field | Required | Notes |
+|---|---|---|
+| `type` | Yes | Always `Skill` — not split into `Handbook`/`Playbook`/`Runbook`, even though `category` distinguishes them. |
+| `title` | Yes | The human-readable name. |
+| `description` | Yes | What this Skill covers and, implicitly, when an agent should reach for it — this is the field an agent reads before deciding to load the rest. |
+| `name` | Yes | Derived from `title`; the slug that names this Skill's export folder. |
+| `category` | Yes | One of `handbook`, `playbook`, or `runbook` — see below. |
+| `domain` | No | A broader area this Skill belongs to, slugified. |
+| `roles` | No | Array of `<team-slug>/<position-slug>` strings — see [Roles](/format/roles#how-other-document-types-reference-a-role). Backed by a real many-to-many relationship, not just free text. |
+| `endorse` | No | A legacy free-text field from an earlier convention (`team/<slug>`). No longer editable in the UI — `roles` replaced it as the actual source of truth for which positions use a Skill — but preserved verbatim on existing documents so nothing is silently dropped on save. |
+
+## Body
+
+Unlike a [Role](/format/roles), a Skill has **no fixed headings at all** —
+whatever structure the content actually needs, as a sequence of `#`
+headings you add yourself. A short reference might be one heading; a
+detailed runbook might be six.
+
+## The three categories
+
+<Callout type="info">
+  `category` is the one field that changes what kind of thing you're
+  writing, not just how it's labeled.
+</Callout>
+
+<Tabs items={["handbook", "playbook", "runbook"]}>
+  <Tabs.Tab>
+    A **handbook** is a technical reference — something true regardless of
+    who's asking or when. "How our staging deploy pipeline works" is a
+    handbook.
+  </Tabs.Tab>
+  <Tabs.Tab>
+    A **playbook** documents a business concept or entity — something
+    that explains *what a thing is* well enough to reason about it, not a
+    sequence of steps to follow. "What counts as a qualified lead" is a
+    playbook.
+  </Tabs.Tab>
+  <Tabs.Tab>
+    A **runbook** is a process that repeats — an ordered sequence someone
+    (or an agent) follows the same way each time. "Deploying to staging"
+    is a runbook.
+  </Tabs.Tab>
+</Tabs>
+
+## Worked example
+
+<FileTree>
+  <FileTree.Folder name="skills" defaultOpen>
+    <FileTree.Folder name="deploying-to-staging" defaultOpen>
+      <FileTree.File name="SKILL.md" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+```yaml filename="SKILL.md"
+---
+type: Skill
+title: Deploying to staging
+description: When rolling out a build to the staging environment
+name: deploying-to-staging
+category: runbook
+domain: platform
+roles:
+  - platform/sre
+---
+
+# Prerequisites
+The build has passed CI and the staging branch is up to date with main.
+
+# Steps
+1. Tag the release candidate.
+2. Run the deploy workflow against the staging target.
+3. Confirm the health check endpoint returns 200.
+
+# Rollback
+If the health check fails, redeploy the previous tag immediately.
+```
+
+## Attachments
+
+A Skill can have files attached alongside `SKILL.md` — a script, a
+template, a reference document. These travel with the Skill through
+[the export bundle](/format/export) at the same relative path they're
+stored at, the same way a Notebook's attachments do.

@@ -1,0 +1,85 @@
+import { Callout, FileTree } from "nextra/components";
+
+# Wiki objects
+
+A Wiki is a directory of external entities your organization tracks —
+vendors, customers, tools, anything with a name and a handful of
+attributes worth remembering. Where the other three document types have
+a shape POF fixes in advance, a Wiki's entity types are defined by
+whoever sets the Wiki up.
+
+## `type` is the entity, not the format
+
+This is the one document type where `type` isn't a fixed word. It's
+whatever entity type this Wiki was configured to hold — `Vendor`,
+`Customer`, `Tool`, anything. See
+[Documents and slugs](/concepts/documents-and-slugs#type-names-the-shape-not-the-identity)
+for why that's still consistent with OKF's requirement that `type` be
+present.
+
+## Fields
+
+| Field | Required | Notes |
+|---|---|---|
+| `type` | Yes | The entity type's own name. |
+| `title` | Yes | The object's identifier — a vendor's name, a customer's name. |
+| `name` | Yes | Derived from `title`. |
+| `resource` | No | An external-system link for this specific object — see below. |
+| `tags` | No | Array of slugified labels. |
+| `metadata` | No | Array of `{key, value}` pairs — free business attributes. **Values are not slugified** — see [Documents and slugs](/concepts/documents-and-slugs#not-everything-gets-slugified). |
+
+## Two attributes are special
+
+Every Wiki entity type is seeded with two default attributes the moment
+it's created: `Resource` and `Tags`. That's why those two get their own
+dedicated frontmatter fields (`resource`/`tags`) instead of falling into
+the generic `metadata` bucket like everything else added later.
+
+<Callout type="info">
+  This is a naming convention, not a hardcoded coincidence: if an entity
+  type's attribute is literally named `Resource` or `Tags`, it maps to
+  the OKF field of the same name. Every other attribute — `phone`,
+  `contact-email`, anything specific to this entity type — lands in
+  `metadata`.
+</Callout>
+
+## Worked example
+
+<FileTree>
+  <FileTree.Folder name="wiki" defaultOpen>
+    <FileTree.Folder name="vendors" defaultOpen>
+      <FileTree.Folder name="acme-corp" defaultOpen>
+        <FileTree.File name="acme-corp.md" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+```yaml filename="acme-corp.md"
+---
+type: Vendor
+title: Acme Corp
+resource: acme-corp
+tags:
+  - saas
+  - billing
+name: acme-corp
+metadata:
+  - phone: "+1 555 0100"
+  - contact-email: billing@acme.com
+---
+
+Free-form notes about the vendor...
+```
+
+## Read-only on every agent surface
+
+Unlike the other three document types, a Wiki object is never created or
+edited through [WebMCP](/surfaces/webmcp), [delegated access](/surfaces/delegated-access),
+or the [remote MCP server](/surfaces/remote-mcp) — all three only ever
+read it (`list_wiki_objects`, `get_wiki_object`). New Wiki objects are
+created through the workspace's own inbox flow instead: a Wiki entry
+usually starts from something messier than a clean API call — a
+forwarded email, a pasted note — and turning that into a structured
+object is a UI problem more than an agent-tool problem. Once it exists,
+though, any agent on any surface can read it like anything else in POF.

@@ -1,0 +1,87 @@
+import { Callout, FileTree } from "nextra/components";
+
+# Roles
+
+A Role describes a position — who's responsible for what, how they're
+expected to operate, and under what constraints. It's meant to be read by
+whoever holds that position, by whoever's handing it off, and by an agent
+acting inside it.
+
+## Fields
+
+| Field | Required | Notes |
+|---|---|---|
+| `type` | Yes | Always `Role`. |
+| `title` | Yes | The human-readable name — `RevOps (pipeline and forecasting)`. |
+| `name` | Yes | Derived from `title`; see [Documents and slugs](/concepts/documents-and-slugs). This is what the reference implementation's tools mean by "position" — `get_role`/`update_role`/`delete_role` all identify a Role by `team` + `name`. |
+| `team` | No | Which team this position belongs to, also slugified. |
+| `person` | No | Who currently holds it, slugified from their name. Absent for an unfilled or shared position. |
+
+## Body
+
+The body has four fixed headings, always in this order, followed by any
+number of free custom headings:
+
+- `# Identity` — a short answer to "who is this, in one or two
+  sentences."
+- `# Operating frame` — where this position actually works day to day:
+  which systems, which cadence, which surfaces.
+- `# Purpose` — the outcome this position exists to produce, not the
+  tasks it happens to do this week.
+- `# Rules` — hard constraints. Things this position must never do, or
+  must always check before doing.
+
+<Callout type="info">
+  These four headings are fixed on purpose — a Role read by an agent
+  should answer the same four questions in the same order every time,
+  whether it's this Role or any other. Custom headings after them are
+  free: add whatever else is specific to this one position.
+</Callout>
+
+## Worked example
+
+<FileTree>
+  <FileTree.Folder name="roles" defaultOpen>
+    <FileTree.Folder name="commercial" defaultOpen>
+      <FileTree.Folder name="revops-pipeline-and-forecasting" defaultOpen>
+        <FileTree.File name="ROLE.md" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+```yaml filename="ROLE.md"
+---
+type: Role
+title: RevOps (pipeline and forecasting)
+name: revops-pipeline-and-forecasting
+team: commercial
+person: maria-lopez
+---
+
+# Identity
+Owns pipeline hygiene and forecast accuracy for the commercial org.
+
+# Operating frame
+Works inside the CRM and the forecasting sheet, week over week.
+
+# Purpose
+Keep forecast numbers the sales team can actually trust.
+
+# Rules
+Never override a rep's stage without a note explaining why.
+```
+
+## How other document types reference a Role
+
+[Skills](/format/skills) and [Notebooks](/format/notebooks) can each list
+`roles`, an array of `<team-slug>/<position-slug>` strings — the same two
+identifiers `get_role` uses, joined with a slash. That's how a Skill ends
+up scoped to the people who'd actually use it, and how a
+[remote MCP connection](/surfaces/remote-mcp) ends up scoped to one
+specific Role's Skills and Notebooks.
+
+Deleting a Role is available on both [WebMCP](/surfaces/webmcp) and
+[delegated access](/surfaces/delegated-access) — it is the one operation
+neither surface treats as reversible, so both require an explicit
+confirmation before it runs.

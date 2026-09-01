@@ -1,0 +1,24 @@
+name: Content correction
+description: A page claims something about the POF format or a reference implementation that doesn't match reality.
+labels: [content]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page URL
+      placeholder: https://pof.dev/format/wiki
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: What the page currently says
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What's actually true, and how you know
+      description: A pointer to the specific behavior or source you checked against is the most useful thing you can include here.
+    validations:
+      required: true

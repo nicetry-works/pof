@@ -1,0 +1,72 @@
+import { FileTree } from "nextra/components";
+
+# The export bundle
+
+A whole workspace exports as a single `.zip`, laid out exactly the way
+each document already lives — no transformation, no lossy flattening,
+nothing reformatted for the occasion:
+
+<FileTree>
+  <FileTree.Folder name="roles" defaultOpen>
+    <FileTree.Folder name="<team-slug>" defaultOpen>
+      <FileTree.Folder name="<position-slug>">
+        <FileTree.File name="ROLE.md" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+  <FileTree.Folder name="skills" defaultOpen>
+    <FileTree.Folder name="<skill-slug>">
+      <FileTree.File name="SKILL.md" />
+      <FileTree.File name="<attached files, at their stored path>" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+  <FileTree.Folder name="notebooks" defaultOpen>
+    <FileTree.Folder name="<notebook-slug>">
+      <FileTree.File name="NOTEBOOK.md" />
+      <FileTree.Folder name="notes">
+        <FileTree.File name="<timestamp>.md" />
+      </FileTree.Folder>
+      <FileTree.File name="<attached files>" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+  <FileTree.Folder name="wiki" defaultOpen>
+    <FileTree.Folder name="<wiki-slug>">
+      <FileTree.Folder name="<entity-slug>">
+        <FileTree.File name="<identifier-slug>.md" />
+      </FileTree.Folder>
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+This is also exactly the shape any of the three
+[access surfaces](/surfaces) read and write against — the export doesn't
+reformat anything, because there's nothing surface-specific left to undo.
+A single item's own export button (on a Role, a Skill, a Notebook, a Wiki
+object) produces the exact same file you'd find at that path inside the
+whole-workspace `.zip` — one document builder, used everywhere a document
+needs to become a file.
+
+## Why re-importing is straightforward, even without an import feature
+
+There's no dedicated "import a `.zip`" feature in the reference
+implementation today, but the shape of the export answers most of the
+work that feature would need to do anyway: every file's path already
+encodes exactly where it belongs (which team, which position, which
+Notebook's notes folder), every frontmatter block already carries the
+fields a create-action needs, and nothing in the bundle references
+anything outside itself — no absolute URLs, no database IDs, no
+app-specific state. Reconstructing a workspace from this bundle is a
+matter of walking the folder tree and calling `create_role`/`create_skill`/
+`create_notebook` once per file found — the same tool calls
+[Quickstart](/quickstart) already walks through by hand.
+
+## What doesn't travel with the export
+
+Two things are deliberately left out, because they're not part of the
+knowledge itself: which agents currently hold a
+[delegated access](/surfaces/delegated-access) credential against this
+workspace, and which [remote MCP](/surfaces/remote-mcp) connections exist
+and what Role they're scoped to. Both are *access* state, not *content* —
+re-approving them after an import is a deliberate, separate step, the
+same way you wouldn't expect a copied folder of files to also copy who
+currently has the key to the room it used to be in.

@@ -1,0 +1,69 @@
+import { Callout } from "nextra/components";
+
+# FAQ
+
+### Why not just use Agent Skills for all of this?
+
+Agent Skills is built specifically for one thing: packaging a capability
+an agent loads on demand. POF covers that case (a Skill document is
+compatible with that same shape) but also covers three document types
+that were never about capability-loading — a Role, a Notebook, and a Wiki
+object describe what an organization *is*, not something an agent
+activates. See [POF vs. MCP vs. Agent Skills](/concepts/pof-vs-mcp-vs-skills)
+for the full comparison.
+
+### Why not just use MCP resources for everything, and skip the format question entirely?
+
+MCP (and WebMCP) answer "how does an agent connect," not "what shape is
+the content once it's connected." Without a format like POF underneath,
+every implementation would invent its own frontmatter fields for a Role
+or a Notebook, and nothing written against one would be portable to
+another. POF is the answer to the second question; MCP is the reference
+implementation's answer to the first (one of three, alongside WebMCP and
+delegated access).
+
+### Can I self-host the reference implementation?
+
+The README documents Docker-based self-hosting — the container runs the
+database migrations before starting the server, same mechanism the
+hosted version uses.
+
+### Is Wiki ever writable by an agent, on any surface?
+
+No, by design — see
+[Wiki objects](/format/wiki#read-only-on-every-agent-surface). New Wiki
+objects come from the workspace's own inbox flow, which is meant for
+messier inputs (a forwarded email, a pasted note) than a clean tool call
+handles well.
+
+### What happens if I never sign up?
+
+Nothing is lost, and nothing stops working. An anonymous session behaves
+identically to a claimed one across all four document types and all
+three access surfaces — see
+[Why POF](/concepts/why-pof#zero-friction-by-default). The only thing
+signing up changes is that your data survives losing that specific
+browser session (a new device, a cleared cookie jar).
+
+<Callout type="info">
+  If you do sign up later, from an existing anonymous session, everything
+  you already built moves with you — including any delegated-access
+  grants you'd already approved. Nothing is thrown away by claiming an
+  account after the fact.
+</Callout>
+
+### Does deleting something ever happen without confirmation?
+
+No. Every delete-capable action, on every surface that has one, is a
+distinct, explicitly named capability or tool — never a side effect of
+some other action, and never available without a human either driving it
+directly (WebMCP) or having approved that exact capability by name in
+advance (delegated access). The [remote MCP server](/surfaces/remote-mcp)
+doesn't expose delete tools at all, for the same reason.
+
+### Is this an official standard?
+
+No — POF is a content format illustrated by one real reference
+implementation, built for the OpenAI WebMCP Challenge. It's offered in
+the spirit Agent Skills was: naming a shape so it can be reused, not
+declaring a standard on anyone's behalf.
