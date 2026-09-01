@@ -18,3 +18,5 @@ npm-debug.log*
 # Env (none checked in — this is a static docs site with no secrets,
 # but ignored on principle in case a local .env.local ever shows up)
 .env*.local
+.vercel
+.env*
