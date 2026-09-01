@@ -62,6 +62,15 @@ npm run build  # production build
 npm run lint   # eslint
 ```
 
+## Deployment
+
+`pof.dev` is deployed manually via the Vercel CLI (`npm run deploy`), not
+on every push to `main` — this repo lives under `nicetry-works`, the
+Vercel project under a personal account, and connecting the two for
+auto-deploy needs a one-time GitHub App authorization outside this repo's
+control. A push here updates the source of truth; publishing it is a
+separate, deliberate step.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Most useful contributions here

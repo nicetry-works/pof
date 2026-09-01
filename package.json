@@ -19,7 +19,8 @@
     "build": "next build",
     "start": "next start -p 3003",
     "lint": "eslint",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "next": "^15.5.25",
